@@ -1,0 +1,27 @@
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    window.onload = function() {
+        var nick = prompt("Enter your nickname");
+        var input = document.getElementById("input");
+        input.focus();
+
+        var socket = io.connect('http://127.0.0.1:3000/');
+
+        socket.on('message', function(message, callback) {
+            var node = document.createTextNode(message);
+            var div = document.createElement("div");
+            div.appendChild(node);
+            document.body.insertBefore(div, input);
+            input.scrollIntoView();
+        });
+
+        input.onchange = function() {
+            var msg = nick + ": " + input.value;
+            socket.emit('message', msg);
+            input.value = "";
+        }
+    };
+</script>
+
+<input id="input" style="width:100%" />
